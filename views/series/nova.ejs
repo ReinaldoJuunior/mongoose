@@ -1,0 +1,29 @@
+<%- include ('../partials/header') %>
+
+  <section id="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <form method="post">
+                <h2>Novas séries</h2>
+                <div class="mb-3">
+                    <label for="name">Nome série</label>
+                    <input name="name" type="text" class="form-control" id="exampleInputEmail1" placeholder="Informe o nome" aria-describedby="emailHelp">
+                    <small id="nameHelp" class="form-text">Nome da série a ser salvo.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="status">Situação:</label>
+                  <select class="form-control" id="status" name="status">
+                    <option value="to-watch">Para assistir</option>
+                    <option value="watching">Assistindo</option>
+                    <option value="watched">Assistido</option>
+                  </select>
+                </div>
+                  <button class="btn btn-primary">Salvar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<%- include ('../partials/footer') %>
