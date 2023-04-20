@@ -15,6 +15,10 @@
                   <td>
                     <%= serie.status  %>
                   </td>
+                  <td>
+                    <a href="/series/editar/<%= serie._id %>" class="btn btn-warning">Editar</a>
+                    <a href="/series/excluir/<%= serie._id %>" class="btn btn-danger">Excluir</a>
+                  </td>
                 </tr>
               <% }) %>
               </table>
