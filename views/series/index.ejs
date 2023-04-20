@@ -13,7 +13,7 @@
                     <%= serie.name  %>
                   </td>
                   <td>
-                    <%= serie.status  %>
+                    <%= labels.filter(label => label.id === serie.status )[0].name %>
                   </td>
                   <td>
                     <a href="/series/editar/<%= serie._id %>" class="btn btn-warning">Editar</a>

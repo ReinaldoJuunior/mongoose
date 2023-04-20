@@ -1,12 +1,17 @@
+const labels =[
+    {id: 'to-watch', name: 'Para Assistir'},
+    {id: 'watching', name: 'Assistindo'},
+    {id: 'watched', name: 'Assistido'}
+]
+
 const index = async ({Serie}, req, res) =>  {
     try{
         const found = await Serie.find({})
-        res.render('series/index', {series: found})
+        res.render('series/index', {series: found, labels })
     }catch(err){
         res.render(err)
     }
 }
-
 
 const novaProcess = async ({Serie}, req, res) => {
     const serie = new Serie(req.body)
@@ -40,14 +45,11 @@ const excluir = async ({ Serie }, req, res) => {
 
 const editarProcess = async ({Serie}, req, res) => {
     try{
-        const serie = await Serie.findOneAndUpdate({__id: req.params.id}, (err, serie) => {
-            serie.name = req.body.name
-            serie.status = req.body.status
-            serie.save()
-        })
-        console.log('edited 2 ')
+        const serie = await Serie.findOneAndUpdate({__id: req.params.id})
+        serie.name = req.body.name
+        serie.status = req.body.status
+        await serie.save()
         res.redirect('/series')
-        return serie
     }catch(err){
         res.render(err)
     }
@@ -55,11 +57,6 @@ const editarProcess = async ({Serie}, req, res) => {
 
 const editarForm = async ({Serie}, req, res) => {
     try{
-        const labels =[
-            {id: 'to-watch', name: 'Para Assistir'},
-            {id: 'watching', name: 'Assistindo'},
-            {id: 'watched', name: 'Assistido'}
-        ]
         const serie = await Serie.findOne({ _id: req.params.id })
         res.render('series/editar', { serie, labels })
         return serie
