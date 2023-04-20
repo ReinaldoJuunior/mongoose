@@ -17,18 +17,19 @@ const novaProcess = async ({Serie}, req, res) => {
     const serie = new Serie(req.body)
 
     try{
-        const saved = await serie.save()
-        console.log('saved 1')
+        await serie.save()
         res.redirect('/series')
-        return saved
-    }catch(err){
-        res.render(err)
+    }catch(e){
+        res.render('series/nova', {
+            errors: Object.keys(e.errors)
+        })
     }
 }
 
 const novaForm = (req, res) => {
+    let errors
     console.log('saved 2')
-    res.render('series/nova')
+    res.render('series/nova', {errors})
 }
 
 const excluir = async ({ Serie }, req, res) => {
@@ -37,21 +38,22 @@ const excluir = async ({ Serie }, req, res) => {
             _id: req.params.id
         })
         res.redirect('/series')
-        return remove
     }catch(err){
         res.send(err)
     }
 }
 
 const editarProcess = async ({Serie}, req, res) => {
+
+    const serie = await Serie.findOneAndUpdate({__id: req.params.id})
+    serie.name = req.body.name
+    serie.status = req.body.status
+    await serie.save()
+
     try{
-        const serie = await Serie.findOneAndUpdate({__id: req.params.id})
-        serie.name = req.body.name
-        serie.status = req.body.status
-        await serie.save()
         res.redirect('/series')
     }catch(err){
-        res.render(err)
+        res.render('/serie/nova', {serie})
     }
 }
 
@@ -59,7 +61,6 @@ const editarForm = async ({Serie}, req, res) => {
     try{
         const serie = await Serie.findOne({ _id: req.params.id })
         res.render('series/editar', { serie, labels })
-        return serie
     }catch(err){
         res.send(err)
     }
