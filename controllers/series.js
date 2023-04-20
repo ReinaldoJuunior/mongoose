@@ -27,9 +27,7 @@ const novaProcess = async ({Serie}, req, res) => {
 }
 
 const novaForm = (req, res) => {
-    let errors
-    console.log('saved 2')
-    res.render('series/nova', {errors})
+    res.render('series/nova', { errors: []})
 }
 
 const excluir = async ({ Serie }, req, res) => {
@@ -45,27 +43,51 @@ const excluir = async ({ Serie }, req, res) => {
 
 const editarProcess = async ({Serie}, req, res) => {
 
-    const serie = await Serie.findOneAndUpdate({__id: req.params.id})
+    const serie = await Serie.findOne({ _id: req.params.id})
     serie.name = req.body.name
     serie.status = req.body.status
     await serie.save()
 
     try{
         res.redirect('/series')
-    }catch(err){
-        res.render('/serie/nova', {serie})
+    }catch(e){
+        res.render('series/nova', {serie, labels,
+            errors: Object.keys(e.errors)
+        })
     }
 }
 
 const editarForm = async ({Serie}, req, res) => {
     try{
         const serie = await Serie.findOne({ _id: req.params.id })
-        res.render('series/editar', { serie, labels })
+        res.render('series/editar', { serie, labels, errors: [] })
     }catch(err){
         res.send(err)
     }
 }
 
+const info = async ({Serie},req, res) => {
+    try {
+        const serie = await Serie.findOne({_id: req.params.id})
+        res.render('series/info', {serie})
+    } catch (error) {
+        res.render('series/info')
+    }
+}
+
+const addComentario = async ({Serie}, req, res) =>{
+    try {
+        await Serie.updateOne({_id: req.params.id},
+            {$push:
+                { comments: req.body.comentario }
+            })
+        res.redirect('/series/info/' + req.params.id)
+    } catch (e) {
+        res.render('/series')
+
+    }
+}
+
 module.exports = {
-    index, novaProcess, novaForm, excluir, editarForm, editarProcess
+    index, novaProcess, novaForm, excluir, editarForm, editarProcess, info, addComentario
 }
